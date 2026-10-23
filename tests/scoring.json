@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "weight_policy": {
+    "version": 1,
+    "basis": "business_priority",
+    "core_min_share": 0.5
+  },
+  "gate_tests": [
+    "test_outputs.py::test_gate_success_has_exact_top_keys",
+    "test_outputs.py::test_gate_nested_packages_match_declared_shapes",
+    "test_outputs.py::test_gate_observed_suboptimal_is_refused",
+    "test_outputs.py::test_gate_invalid_carding_is_refused",
+    "test_outputs.py::test_gate_split_route_is_refused",
+    "test_outputs.py::test_gate_duplicate_json_key_is_refused",
+    "test_outputs.py::test_gate_unwritable_output_is_refused"
+  ],
+  "tests": {
+    "test_outputs.py::test_inverse_weights_are_recovered": {
+      "weight": 0.09,
+      "priority": "core",
+      "rationale": "恢复唯一权重方向是全部检修成本口径能够复用的前提。"
+    },
+    "test_outputs.py::test_certificate_margins_are_exact": {
+      "weight": 0.09,
+      "priority": "core",
+      "rationale": "历史最优面证书必须证明观测方案确为全部并列最优，并量化次优间隔。"
+    },
+    "test_outputs.py::test_held_out_plan_uses_recovered_weights": {
+      "weight": 0.09,
+      "priority": "core",
+      "rationale": "新批次路线必须真正使用反演所得权重，而不是继续沿用旧的排序口径。"
+    },
+    "test_outputs.py::test_held_out_metrics_follow_weighted_components": {
+      "weight": 0.09,
+      "priority": "core",
+      "rationale": "四项原始成本与加权目标的对应关系决定复盘时能否审计优化结论。"
+    },
+    "test_outputs.py::test_held_out_route_has_contiguous_blocks": {
+      "weight": 0.08,
+      "priority": "core",
+      "rationale": "设备作业块连续是现场执行与成本口径共同的硬约束。"
+    },
+    "test_outputs.py::test_held_out_canonical_tie_break": {
+      "weight": 0.08,
+      "priority": "core",
+      "rationale": "主目标并列时必须以路线、卡片和设备序列稳定唯一化交付计划。"
+    },
+    "test_outputs.py::test_later_window_is_used_when_first_is_too_short": {
+      "weight": 0.08,
+      "priority": "core",
+      "rationale": "重叠窗口的换窗规则直接决定作业块是否能在正确时段完成。"
+    },
+    "test_outputs.py::test_success_output_is_compact_sorted_and_newline_terminated": {
+      "weight": 0.04,
+      "priority": "supporting",
+      "rationale": "稳定紧凑序列化便于反演结果进入审计记录和自动比对。"
+    },
+    "test_outputs.py::test_extra_top_level_key_is_refused": {
+      "weight": 0.04,
+      "priority": "schema",
+      "rationale": "严格顶层集合可阻止旧排程模块的无关字段混入反演输入。"
+    },
+    "test_outputs.py::test_wrong_schema_is_refused": {
+      "weight": 0.04,
+      "priority": "schema",
+      "rationale": "不同版本的权重和成本含义不能混用，否则反演会得到错误口径。"
+    },
+    "test_outputs.py::test_wrong_history_count_is_refused": {
+      "weight": 0.04,
+      "priority": "boundary",
+      "rationale": "三份独立历史面是权重方向唯一化的最小证据数量。"
+    },
+    "test_outputs.py::test_non_overlapping_windows_are_refused": {
+      "weight": 0.04,
+      "priority": "boundary",
+      "rationale": "不重叠窗口不符合换窗语义，必须在成本反演前拒收。"
+    },
+    "test_outputs.py::test_boolean_window_timestamp_is_refused": {
+      "weight": 0.04,
+      "priority": "schema",
+      "rationale": "布尔值伪装成整数会污染窗口比较并改变可行开工时刻。"
+    },
+    "test_outputs.py::test_short_signature_is_refused": {
+      "weight": 0.04,
+      "priority": "boundary",
+      "rationale": "六维指纹缺项会改变技能成本并对权重反演造成系统偏差。"
+    },
+    "test_outputs.py::test_wrong_observed_count_is_refused": {
+      "weight": 0.04,
+      "priority": "boundary",
+      "rationale": "历史最优面缺项会让反演丢失一条独立成本等式。"
+    },
+    "test_outputs.py::test_observed_optima_must_include_all_ties": {
+      "weight": 0.04,
+      "priority": "schema",
+      "rationale": "把次优方案混入历史会伪造权重关系，必须校验完整最优面。"
+    },
+    "test_outputs.py::test_rank_deficient_history_ties_are_refused": {
+      "weight": 0.04,
+      "priority": "schema",
+      "rationale": "秩不足意味着权重方向不唯一，不能输出看似确定的检修口径。"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+schema_version = "1.3"
+
+[task]
+name = "local/inverse-maintenance-cost-recovery"
+description = "Recover a unique primitive maintenance objective from historical optimal faces and solve a held-out windowed routing batch."
+authors = [{ name = "yuenlai" }]
+keywords = ["inverse-optimization", "objective-recovery", "maintenance", "linear-constraints", "routing"]
+
+[agent]
+timeout_sec = 3600
+
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 2048
+storage_mb = 10240
+gpus = 0
+allow_internet = true
+
+[verifier]
+timeout_sec = 180
+
+[metadata]
+difficulty = "hard"
+category = "optimization"
+tags = ["inverse-optimization", "optimal-face-recovery", "overlapping-windows", "held-out-routing"]
+expert_time_estimate = "60m"
