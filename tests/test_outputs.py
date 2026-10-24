@@ -657,7 +657,7 @@ def test_later_window_is_used_when_first_is_too_short(tmp_path: Path) -> None:
 
 
 def test_touching_windows_are_refused(tmp_path: Path) -> None:
-    """题面：「两段窗口满足 `max(open_min) < min(close_min)`。」"""
+    """题面：「同一张卡片的窗口区间不得重叠，首尾相接也不算合法。」"""
     payload = _payload()
     held = payload["held_out"]
     for machine in held["machines"]:
@@ -720,14 +720,17 @@ def test_block_finishing_at_window_close_is_accepted(tmp_path: Path) -> None:
 def test_success_output_is_compact_sorted_and_newline_terminated(
     tmp_path: Path,
 ) -> None:
-    """题面：「输出采用无空白 JSON；键以字母升序，结尾加单个换行。」"""
+    """题面：「同一份历史与 held-out 包重跑时，应重建相同证书和路线字节。」"""
     payload = _payload()
     source = tmp_path / "input.json"
     output = tmp_path / "result.json"
+    second_output = tmp_path / "result-copy.json"
     _write_json(source, payload)
     completed = _run(source, output)
+    second_run = _run(source, second_output)
     assert completed.returncode == 0, 'FAILED CASE-SERIAL-01 CASE-OUTPUT-FIELDS-01 CASE-OUTPUT-WEIGHTS-01 CASE-OUTPUT-CERTIFICATE-01'
     raw = output.read_bytes()
+    assert second_run.returncode == 0
     assert completed.returncode == 0, 'FAILED CASE-SERIAL-01 CASE-OUTPUT-FIELDS-01 CASE-OUTPUT-WEIGHTS-01 CASE-OUTPUT-CERTIFICATE-01'
     parsed = json.loads(raw)
     canonical = (
@@ -735,6 +738,7 @@ def test_success_output_is_compact_sorted_and_newline_terminated(
     )
     assert completed.returncode == 0, 'FAILED CASE-SERIAL-01 CASE-OUTPUT-FIELDS-01 CASE-OUTPUT-WEIGHTS-01 CASE-OUTPUT-CERTIFICATE-01'
     assert raw == canonical, "FAILED CASE-SERIAL-01"
+    assert second_output.read_bytes() == raw, "FAILED CASE-SERIAL-01"
     assert set(parsed) == {
         "certificate",
         "plan",

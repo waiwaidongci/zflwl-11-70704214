@@ -27,6 +27,7 @@
 `CARD-[A-Z0-9]{2}` 且在同一批次内不得重复；`signature` 是 6 个整数。
 `windows` 恰好包含两项，每项是 `[open_min, close_min]`。四个时刻都是非负整数，
 每项满足 `open_min < close_min`，且两段窗口满足 `max(open_min) < min(close_min)`。
+同一张卡片的窗口区间不得重叠，首尾相接也不算合法。
 
 每张工单只能有 `order_id`、`symptom`、`duration_min`、`due_min`、`weight`。工单号匹配
 `WO-[A-Z0-9]{4}` 且在同一批次内不得重复；`symptom` 是 6 个整数；`duration_min` 和
@@ -98,3 +99,4 @@ sum((a.symptom[j] + b.symptom[j] - 2 * c.signature[j]) ** 2 for j in range(6))
 退出。输出采用无空白 JSON；键以字母升序，结尾加单个换行。
 
 候选程序不得读取测试目录，也不得写死历史号、工单号、卡片号、设备号、具体路线或权重。
+同一份历史与 held-out 包重跑时，应重建相同证书和路线字节。
