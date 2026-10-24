@@ -69,7 +69,7 @@ sum((a.symptom[j] + b.symptom[j] - 2 * c.signature[j]) ** 2 for j in range(6))
 
 ## 历史最优面的约束
 
-`observed_optima` 恰好包含 2 个方案对象，每个对象只能有 `carding`、`pairing`、`route`。
+历史最优面不能多也不能少：`observed_optima` 恰好包含 2 个方案对象，每个对象只能有 `carding`、`pairing`、`route`。
 它们是在本份历史记录的全部可行方案中，主目标同为最小值的全部方案，不能是任取的两个并列
 方案，也不能夹入次优方案。
 
@@ -79,9 +79,9 @@ sum((a.symptom[j] + b.symptom[j] - 2 * c.signature[j]) ** 2 for j in range(6))
 
 ## 交回结果
 
-成功结果只保留 `status`、`weights`、`certificate`、`plan` 四项。
+交付对象不能附加调试字段：成功结果只保留 `status`、`weights`、`certificate`、`plan` 四项。
 
-`status` 为 `"ok"`。`weights` 恰好有 `skill`、`setup`、`travel`、`tardiness`，值是恢复出的
+`status` 为 `"ok"`。恢复权重统一放在 `weights` 恰好有 `skill`、`setup`、`travel`、`tardiness`，值是恢复出的
 四个权重。`certificate` 恰好有 `equality_rank` 和 `margins`：前者是三条成本差等式矩阵的秩，
 后者按输入历史顺序给出每份历史中“最接近最优的次优方案目标减最优目标”的整数差。
 

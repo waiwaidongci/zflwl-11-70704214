@@ -62,7 +62,7 @@ def _window(value: Any, label: str) -> tuple[int, int]:
         raise Refused(f"{label} must contain two timestamps")
     opened = _integer(value[0], f"{label} open_min")
     closed = _integer(value[1], f"{label} close_min")
-    if opened >= closed:
+    if not opened < closed:
         raise Refused(f"{label} must open before it closes")
     return (opened, closed)
 

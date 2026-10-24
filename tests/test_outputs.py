@@ -656,6 +656,67 @@ def test_later_window_is_used_when_first_is_too_short(tmp_path: Path) -> None:
     )
 
 
+def test_touching_windows_are_refused(tmp_path: Path) -> None:
+    """题面：「两段窗口满足 `max(open_min) < min(close_min)`。」"""
+    payload = _payload()
+    held = payload["held_out"]
+    for machine in held["machines"]:
+        machine["x"] = 0
+        machine["y"] = 0
+    for card in held["cards"]:
+        card["signature"] = [0, 0, 0, 0, 0, 0]
+        card["windows"] = [[0, 10], [10, 20]]
+    for order in held["orders"]:
+        order["symptom"] = [0, 0, 0, 0, 0, 0]
+        order["duration_min"] = 1
+        order["due_min"] = 0
+        order["weight"] = 1
+    held["shift"] = {
+        "start_min": 0,
+        "travel_min_per_unit": 1,
+        "depot_x": 0,
+        "depot_y": 0,
+    }
+    source = tmp_path / "input.json"
+    output = tmp_path / "result.json"
+    _write_json(source, payload)
+    completed = _run(source, output)
+    assert completed.returncode == 2
+    assert completed.stderr.startswith("REFUSED: ")
+    assert not output.exists()
+
+
+def test_block_finishing_at_window_close_is_accepted(tmp_path: Path) -> None:
+    """题面：「块的开工时刻取能完成它的」"""
+    payload = _payload()
+    held = payload["held_out"]
+    for machine in held["machines"]:
+        machine["x"] = 0
+        machine["y"] = 0
+    for card in held["cards"]:
+        card["signature"] = [0, 0, 0, 0, 0, 0]
+        card["windows"] = [[0, 10], [9, 500]]
+    for order in held["orders"]:
+        order["symptom"] = [0, 0, 0, 0, 0, 0]
+        order["duration_min"] = 1
+        order["due_min"] = 0
+        order["weight"] = 1
+    held["shift"] = {
+        "start_min": 0,
+        "travel_min_per_unit": 1,
+        "depot_x": 0,
+        "depot_y": 0,
+    }
+    source = tmp_path / "input.json"
+    output = tmp_path / "result.json"
+    _write_json(source, payload)
+    completed = _run(source, output)
+    result = json.loads(output.read_text(encoding="utf-8"))
+    assert completed.returncode == 0
+    assert result["plan"]["metrics"]["total_setup"] == 4
+    assert result["plan"]["metrics"]["weighted_tardiness"] == 33
+
+
 def test_success_output_is_compact_sorted_and_newline_terminated(
     tmp_path: Path,
 ) -> None:
@@ -709,7 +770,7 @@ def test_extra_top_level_key_is_refused(tmp_path: Path) -> None:
 
 
 def test_wrong_schema_is_refused(tmp_path: Path) -> None:
-    """题面：「`schema` 固定为 `\"inverse-maint-v1\"`。」"""
+    """题面：「`schema` 固定为」"""
     payload = _payload()
     payload["schema"] = "maint-plan-v3"
     source = tmp_path / "input.json"

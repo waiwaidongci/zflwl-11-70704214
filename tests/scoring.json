@@ -36,7 +36,7 @@
       "rationale": "四项原始成本与加权目标的对应关系决定复盘时能否审计优化结论。"
     },
     "test_outputs.py::test_held_out_route_has_contiguous_blocks": {
-      "weight": 0.08,
+      "weight": 0.06,
       "priority": "core",
       "rationale": "设备作业块连续是现场执行与成本口径共同的硬约束。"
     },
@@ -46,9 +46,19 @@
       "rationale": "主目标并列时必须以路线、卡片和设备序列稳定唯一化交付计划。"
     },
     "test_outputs.py::test_later_window_is_used_when_first_is_too_short": {
-      "weight": 0.08,
+      "weight": 0.06,
       "priority": "core",
       "rationale": "重叠窗口的换窗规则直接决定作业块是否能在正确时段完成。"
+    },
+    "test_outputs.py::test_block_finishing_at_window_close_is_accepted": {
+      "weight": 0.05,
+      "priority": "core",
+      "rationale": "作业块恰在窗口关闭时刻完成时仍属可行，必须使用较早窗口而不能误落到后续窗口。"
+    },
+    "test_outputs.py::test_touching_windows_are_refused": {
+      "weight": 0.01,
+      "priority": "boundary",
+      "rationale": "两段窗口只接触而没有重叠时不满足换窗前提，必须在成本反演前拒收。"
     },
     "test_outputs.py::test_success_output_is_compact_sorted_and_newline_terminated": {
       "weight": 0.04,
@@ -81,7 +91,7 @@
       "rationale": "布尔值伪装成整数会污染窗口比较并改变可行开工时刻。"
     },
     "test_outputs.py::test_short_signature_is_refused": {
-      "weight": 0.04,
+      "weight": 0.02,
       "priority": "boundary",
       "rationale": "六维指纹缺项会改变技能成本并对权重反演造成系统偏差。"
     },
